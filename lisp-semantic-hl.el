@@ -437,7 +437,7 @@ In Emacs it just forwards START, END and ATTR to
 
 (defun lisp-semantic-hl-fontify-symbol (start end)
   "Fontify single symbol from START to END, without prefix."
-  (if (derived-mode-p 'emacs-lisp-mode)
+  (if (eq major-mode 'emacs-lisp-mode)
       (lisp-semantic-hl-fontify-symbol-elisp start end)
     (lisp-semantic-hl-fontify-symbol-cl start end)))
 
