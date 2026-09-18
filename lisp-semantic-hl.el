@@ -617,7 +617,7 @@ fontify-symbol."
                until (< form-start start))
       (if (< form-start start)
           ;; If the region is inside one form
-          (let ((form-end (scan-sexps form-start 1)))
+          (let ((form-end (ignore-errors (scan-sexps form-start 1))))
             (if (or (and (boundp 'sly-mode) (symbol-value 'sly-mode))
                     (and (boundp 'slime-mode) (symbol-value 'slime-mode)))
                 (let ((lisp-semantic-hl--symbols
