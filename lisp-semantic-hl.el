@@ -197,10 +197,11 @@
 POINT should be putted at (|foo bar)"
   (save-excursion
     (cl-loop initially (setq end point)
-             for end = (ignore-errors (goto-char end) (forward-sexp 1) (point))
-             for start = (ignore-errors (forward-sexp -1) (point))
-             while (and start end)
-             collect (list start end))))
+	     for prev = nil then end
+	     for end = (ignore-errors (goto-char end) (forward-sexp 1) (point))
+	     for start = (ignore-errors (forward-sexp -1) (point))
+	     while (and start end (not (eql end prev)))
+	     collect (list start end))))
 
 (defun lisp-semantic-hl-char-escaped-p (charpos)
   "Returns true if char at CHARPOS is escaped."
