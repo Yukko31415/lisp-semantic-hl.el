@@ -336,6 +336,8 @@ In Emacs it just forwards START, END and ATTR to
           (when symbols (setq result (nconc result symbols)))))
       (delete-dups result))))
 
+
+
 (defcustom lisp-semantic-hl-compute-symbols-timeout 1.5
   "Timeout for collecting sym info from the CL env via Slime or Sly."
   :type 'number
@@ -612,7 +614,8 @@ fontify-symbol."
       (setq end (lisp-semantic-hl-try-skip-a-quote-forward end)))
     (let ((form-start end))
       (cl-loop for pos = (ignore-errors (scan-lists form-start -1 1))
-               while pos
+	       for prev = nil then pos
+               while (and pos (not (eql pos prev)))
                do (setq form-start pos)
                until (< form-start start))
       (if (< form-start start)
@@ -628,8 +631,10 @@ fontify-symbol."
         (progn
           (setq form-start start)
           (cl-loop for pos = (ignore-errors (scan-lists form-start -1 1))
-                   while pos
-                   do (setq form-start pos))
+		   for prev = nil then pos
+                   while (and pos (not (eql pos prev)))
+                   do (setq form-start pos)
+		   until (< form-start start))
           (let ((form-end form-start))
             (cl-loop while (setq form-end (ignore-errors (scan-sexps form-end 1)))
                      do (setq form-start form-end)
@@ -657,6 +662,7 @@ LOUDLY is ignored."
 ;;; Mode and Hooks
 
 ;;;###autoload
+
 (define-minor-mode lisp-semantic-hl-mode
   "Semantic Syntax Highlighting for Common Lisp & Elisp in Emacs.
 
